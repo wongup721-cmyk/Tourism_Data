@@ -20,6 +20,8 @@ This repository contains the modelling datasets, comment sentiment data, and bas
 
 ## TDF-Agents Framework
 
+![TDF-Agents Framework](assets/tdf-agent-framework.png)
+
 TDF-Agents follows a four-layer collaborative design:
 
 - **Data Collection Agent (DCA):** collects and integrates multi-source heterogeneous data, including structured sources and unstructured web information.
@@ -151,4 +153,3 @@ If this repository is useful for your research, please cite the accompanying pap
   year   = {2026}
 }
 ```
-
