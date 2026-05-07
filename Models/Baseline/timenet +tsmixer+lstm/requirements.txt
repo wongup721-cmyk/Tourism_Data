@@ -1,0 +1,26 @@
+一般正常一共需要几个库，每个人环境都不同，按需下载
+einops
+matplotlib
+numpy
+pandas
+patool
+reformer-pytorch
+scikit-learn
+scipy
+sktime
+sympy
+tqdm
+torch( gru cpu都行，不过最好gpu，这个一定得去官网装，不能pip)
+python3.9 3.10差不多就能兼容很多
+
+差什么库直接在编译器的打开终端
+pip install 就行
+比如pip install reformer-pytorch
+pip install scikit-learn
+后面个人不推荐指定版本就是例如pip install scikit-learn == 1.11这种，最新的就行，都能向下兼容
+
+如果出现pip安装不上比如什么清华大学的镜像源进不去3个解决办法
+1.有的学校的校园网他访问不了，清华大学的镜像源，开个热点手机或者自己手动修改电脑的config网络配置（网上有教程，小白最好别学容易出事）
+2.挂个VPN（梯子），用美国的IP进行pip操作
+3.直接去网上找对应的缺失包（这个不推荐，容易产生兼容问题）
+4.去淘宝找专业的人，买这些包（前面的3个办法失灵，这个最后的办法，就是贵点）
