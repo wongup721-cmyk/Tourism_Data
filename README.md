@@ -14,7 +14,7 @@ Di Han, Bocheng Wang, Jianqing Li, Xicheng Du, Qixian Li, and Liangzhou Qu
 
 Tourism demand forecasting has become more difficult in the post-pandemic period because travelers' decisions are influenced not only by historical demand patterns, but also by online sentiment, health-risk perception, policy changes, weather, holidays, and other heterogeneous signals.
 
-The accompanying paper proposes **Tourism Demand Forecasting Agents (TDF-Agents)**, an end-to-end LLM-based multi-agent collaborative framework for tourism demand forecasting. TDF-Agents automates the workflow from multi-source data collection and processing to feature recommendation and forecasting. The empirical study uses weekly tourist arrival data for Macau and evaluates whether the feature sets constructed by TDF-Agents improve multiple forecasting models.
+The accompanying paper proposes **Tourism Demand Forecasting Agents (TDF-Agents)**, an end-to-end LLM-based multi-agent collaborative framework for tourism demand forecasting. TDF-Agents automates the workflow from multi-source data collection and feature recommendation to memory-guided alignment and forecasting execution. The empirical study uses weekly tourist arrival data for Macau and evaluates whether the feature sets constructed by TDF-Agents improve multiple forecasting models.
 
 This repository contains the modelling datasets, comment sentiment data, and baseline forecasting implementations used in the empirical analysis.
 
@@ -22,19 +22,20 @@ This repository contains the modelling datasets, comment sentiment data, and bas
 
 ![TDF-Agents Framework](assets/tdf-agent-framework.png)
 
-TDF-Agents follows a four-layer collaborative design:
+TDF-Agents follows a memory-augmented collaborative design with five specialized agents:
 
 - **Data Collection Agent (DCA):** collects and integrates multi-source heterogeneous data, including structured sources and unstructured web information.
 - **Data Processing Agent (DPA):** cleans, aligns, transforms, and standardizes raw data, then constructs candidate features.
 - **Feature Recommendation Agent (FRA):** combines tourism-domain knowledge, retrieval-augmented reasoning, and regularization constraints to recommend interpretable feature sets.
-- **Forecasting Agent (FA):** trains and evaluates time-series forecasting models using the recommended features.
+- **Memory Agent (MA):** stores alignment memory and reflective memory, including data meta features, key factors, domain knowledge, experiment logs, fitted images, and model parameters.
+- **Forecasting Agent (FA):** performs memory-guided forecasting through heuristic routing, validation, execution, reflection, and output generation.
 
-The framework is designed to reduce manual intervention in tourism forecasting workflows and improve feature adaptability under changing market conditions, especially after major public health events.
+The framework is designed to reduce manual intervention in tourism forecasting workflows, connect front-end feature logic with downstream forecasting execution, and provide an automated, traceable, and dynamically adaptive solution for changing market conditions.
 
 ## Main Contributions
 
 - **Methodological innovation:** introduces an LLM-based multi-agent collaborative mechanism for tourism demand forecasting.
-- **Standardized data paradigm:** builds a reproducible workflow for processing multi-source heterogeneous tourism data.
+- **Standardized data paradigm:** builds a reproducible workflow for processing multi-source heterogeneous tourism data and connects feature generation with forecasting execution through structured memory and reflective feedback.
 - **Empirical insight:** shows that infectious disease-related features become important predictors in the post-pandemic forecasting context.
 - **Cross-model validation:** evaluates the TDF-Agents feature set across CNN, LSTM, TimesNet, TSMixer, and iTransformer baselines.
 
@@ -42,20 +43,22 @@ The framework is designed to reduce manual intervention in tourism forecasting w
 
 ```text
 .
-├── Comment data/
-│   ├── Comments_original/       # Original tourism comment data
-│   └── Comments_processed/      # Sentiment-processed comment data
-├── Models/
-│   ├── Data/                    # Feature sets and modelling datasets
-│   └── Baseline/
-│       ├── CNN/                 # CNN baseline
-│       ├── itransfomer/         # iTransformer baseline
-│       └── timenet +tsmixer+lstm/
-│           └── timenet +tsmixer+lstm/
-│               ├── TimeNet.py
-│               ├── Tsmixer.py
-│               └── LSTM.py
-└── README.md
+|-- Comment data/
+|   |-- Comments_original/       # Original tourism comment data
+|   `-- Comments_processed/      # Sentiment-processed comment data
+|-- Models/
+|   |-- Data/                    # Feature sets and modelling datasets
+|   `-- Baseline/
+|       |-- CNN/                 # CNN baseline
+|       |-- itransfomer/         # iTransformer baseline
+|       `-- timenet +tsmixer+lstm/
+|           `-- timenet +tsmixer+lstm/
+|               |-- TimeNet.py
+|               |-- Tsmixer.py
+|               `-- LSTM.py
+|-- assets/
+|   `-- tdf-agent-framework.png
+`-- README.md
 ```
 
 ## Data
@@ -92,7 +95,9 @@ Main entry files:
 
 ## Experimental Findings
 
-The paper reports that incorporating the TDF-Agents feature set improves forecasting accuracy across all baseline models compared with using no external feature set. It also achieves strong performance compared with traditional feature-selection strategies such as MI and mRMR, especially on MAPE.
+The paper reports that TDF-Agents improves automated feature engineering in terms of coverage, novelty, and structural redundancy under the DCEI metric system. Its end-to-end workflow reduces manual intervention points from 13 to 1, improving efficiency while preserving traceability through structured memory and reflective feedback.
+
+In forecasting experiments, incorporating the TDF-Agents feature set improves accuracy across all baseline models compared with using no external feature set. It also achieves consistently strong performance compared with traditional feature-selection strategies such as MI and mRMR, especially on MAPE.
 
 The ablation study further shows that removing infectious disease-related features generally increases forecasting error, supporting the conclusion that health-risk indicators are important for post-pandemic tourism demand forecasting.
 
