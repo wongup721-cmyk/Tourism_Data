@@ -8,13 +8,13 @@ This repository provides the code and data resources for the paper:
 
 **A Task-Driven Multi-Agent Collaborative Framework for Dynamic Tourism Demand Forecasting**
 
-Di Han, Bocheng Wang, Jianqing Li, Xicheng Du, Qixian Li, and Liangzhou Qu
+Di Han, Bocheng Wang, Jianqing Li, Qixian Li, and Liangzhou Qu
 
 ## Introduction
 
 Tourism demand forecasting has become more difficult in the post-pandemic period because travelers' decisions are influenced not only by historical demand patterns, but also by online sentiment, health-risk perception, policy changes, weather, holidays, and other heterogeneous signals.
 
-The accompanying paper proposes **Tourism Demand Forecasting Agents (TDF-Agents)**, an end-to-end LLM-based multi-agent collaborative framework for tourism demand forecasting. TDF-Agents automates the workflow from multi-source data collection and feature recommendation to memory-guided alignment and forecasting execution. The empirical study uses weekly tourist arrival data for Macau and evaluates whether the feature sets constructed by TDF-Agents improve multiple forecasting models.
+The accompanying paper proposes **Tourism Demand Forecasting Agents (TDF-Agents)**, an end-to-end LLM-based multi-agent collaborative framework for tourism demand forecasting. TDF-Agents automates the workflow from multi-source data collection and feature recommendation to memory-guided alignment and forecasting execution. The empirical study uses weekly visitor-arrival data from Macau as the main experiment and Hong Kong as a cross-destination robustness experiment, evaluating predictive effectiveness under heterogeneous data conditions.
 
 This repository contains the modelling datasets, comment sentiment data, and baseline forecasting implementations used in the empirical analysis.
 
@@ -27,8 +27,8 @@ TDF-Agents follows a memory-augmented collaborative design with five specialized
 - **Data Collection Agent (DCA):** collects and integrates multi-source heterogeneous data, including structured sources and unstructured web information.
 - **Data Processing Agent (DPA):** cleans, aligns, transforms, and standardizes raw data, then constructs candidate features.
 - **Feature Recommendation Agent (FRA):** combines tourism-domain knowledge, retrieval-augmented reasoning, and regularization constraints to recommend interpretable feature sets.
-- **Memory Agent (MA):** stores alignment memory and reflective memory, including data meta features, key factors, domain knowledge, experiment logs, fitted images, and model parameters.
-- **Forecasting Agent (FA):** performs memory-guided forecasting through heuristic routing, validation, execution, reflection, and output generation.
+- **Memory Agent (MA):** stores alignment memory and reflective memory, including data meta features, key factors, domain knowledge, experiment logs, fitted images, and model parameters. It bridges feature generation and forecasting execution.
+- **Forecasting Agent (FA):** uses MA-provided context for memory-guided model initialization, validation, execution, reflection, and final forecast generation.
 
 The framework is designed to reduce manual intervention in tourism forecasting workflows, connect front-end feature logic with downstream forecasting execution, and provide an automated, traceable, and dynamically adaptive solution for changing market conditions.
 
@@ -73,19 +73,20 @@ The repository includes the following feature-set files under `Models/Data/`:
 - `mRMR_ex.csv` / `mRMR_ex.xlsx`: mRMR feature set excluding infectious disease-related features.
 - `Total_data.xlsx`: integrated modelling data.
 
-The `Comment data/` directory contains original and sentiment-processed Macau tourism comment data used for sentiment-related feature construction.
+The `Comment data/` directory contains original and sentiment-processed Macau tourism comment data used for sentiment-related feature construction. The current repository release contains the Macau data resources; the Hong Kong robustness data described in the paper is not included in this repository.
 
 ## Baseline Models
 
-The empirical evaluation uses five forecasting models:
+The latest paper evaluates the proposed feature sets using six forecasting models:
 
 - CNN
 - LSTM
 - TimesNet
 - TSMixer
 - iTransformer
+- DE-TFT
 
-Main entry files:
+This repository currently provides implementations for the following five models:
 
 - `Models/Baseline/CNN/cnn.py`
 - `Models/Baseline/itransfomer/itransformer.py`
@@ -95,11 +96,11 @@ Main entry files:
 
 ## Experimental Findings
 
-The paper reports that TDF-Agents improves automated feature engineering in terms of coverage, novelty, and structural redundancy under the DCEI metric system. Its end-to-end workflow reduces manual intervention points from 13 to 1, improving efficiency while preserving traceability through structured memory and reflective feedback.
+The paper reports that TDF-Agents improves automated feature engineering in terms of coverage, novelty, and structural redundancy under the DCEI metric system. For the Macau workflow, it reduces total task completion time from 380 minutes to 46 minutes and manual intervention points from 13 to 1, improving execution efficiency while preserving traceability through structured memory and reflective feedback.
 
-In forecasting experiments, incorporating the TDF-Agents feature set improves accuracy across all baseline models compared with using no external feature set. It also achieves consistently strong performance compared with traditional feature-selection strategies such as MI and mRMR, especially on MAPE.
+In the Macau experiment, incorporating the TDF-Agents feature set improves forecasting accuracy across the evaluated models and delivers consistently strong MAPE performance compared with traditional feature-selection strategies such as MI and mRMR. The Hong Kong robustness experiment further shows that the framework remains effective under different destination characteristics and more constrained external-data availability.
 
-The ablation study further shows that removing infectious disease-related features generally increases forecasting error, supporting the conclusion that health-risk indicators are important for post-pandemic tourism demand forecasting.
+Supplementary Diebold-Mariano tests indicate that the forecast-loss reductions are statistically significant in the relevant Macau and Hong Kong model-metric comparisons. Ablation experiments further show that removing infectious disease-related features generally worsens MAPE in both destinations, supporting the cross-destination predictive value of health-risk indicators in post-pandemic tourism demand forecasting.
 
 ## Installation
 
@@ -154,7 +155,7 @@ If this repository is useful for your research, please cite the accompanying pap
 ```bibtex
 @article{han2026tdfagents,
   title  = {A Task-Driven Multi-Agent Collaborative Framework for Dynamic Tourism Demand Forecasting},
-  author = {Han, Di and Wang, Bocheng and Li, Jianqing and Du, Xicheng and Li, Qixian and Qu, Liangzhou},
+  author = {Han, Di and Wang, Bocheng and Li, Jianqing and Li, Qixian and Qu, Liangzhou},
   year   = {2026}
 }
 ```
