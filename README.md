@@ -47,9 +47,10 @@ The framework is designed to reduce manual intervention in tourism forecasting w
 |   |-- Comments_original/       # Original tourism comment data
 |   `-- Comments_processed/      # Sentiment-processed comment data
 |-- Models/
-|   |-- Data/                    # Feature sets and modelling datasets
+|   |-- Data/                    # Macau feature sets and Hong Kong monthly data
 |   `-- Baseline/
 |       |-- CNN/                 # CNN baseline
+|       |-- DE-TFT/              # Differential Evolution optimized TFT
 |       |-- itransfomer/         # iTransformer baseline
 |       `-- timenet +tsmixer+lstm/
 |           `-- timenet +tsmixer+lstm/
@@ -72,8 +73,11 @@ The repository includes the following feature-set files under `Models/Data/`:
 - `mRMR.csv` / `mRMR.xlsx`: feature set selected by mRMR.
 - `mRMR_ex.csv` / `mRMR_ex.xlsx`: mRMR feature set excluding infectious disease-related features.
 - `Total_data.xlsx`: integrated modelling data.
+- `hk_monthly_features.csv`: monthly Hong Kong dataset used for the cross-destination robustness experiment.
 
-The `Comment data/` directory contains original and sentiment-processed Macau tourism comment data used for sentiment-related feature construction. The current repository release contains the Macau data resources; the Hong Kong robustness data described in the paper is not included in this repository.
+The `Comment data/` directory contains original and sentiment-processed Macau tourism comment data used for sentiment-related feature construction.
+
+The Hong Kong CSV is preserved in its original form. It contains 169 rows, including 144 rows with valid `Total_arrivals` values from January 2013 to December 2024. Before model training, remove rows where `Total_arrivals` is missing, including the trailing empty row. The DE-TFT data loader expects complete numeric features and target values.
 
 ## Baseline Models
 
@@ -86,9 +90,10 @@ The latest paper evaluates the proposed feature sets using six forecasting model
 - iTransformer
 - DE-TFT
 
-This repository currently provides implementations for the following five models:
+This repository provides implementations for all six evaluated models. Main entry files include:
 
 - `Models/Baseline/CNN/cnn.py`
+- `Models/Baseline/DE-TFT/run_de_tft.py`
 - `Models/Baseline/itransfomer/itransformer.py`
 - `Models/Baseline/timenet +tsmixer+lstm/timenet +tsmixer+lstm/TimeNet.py`
 - `Models/Baseline/timenet +tsmixer+lstm/timenet +tsmixer+lstm/Tsmixer.py`
@@ -120,6 +125,12 @@ pip install torch
 
 For GPU usage, please follow the official PyTorch installation instructions for your local CUDA version.
 
+Install the DE-TFT baseline dependencies with:
+
+```bash
+pip install -r "Models/Baseline/DE-TFT/requirements.txt"
+```
+
 ## Usage
 
 Clone the repository:
@@ -136,6 +147,17 @@ python "Models/Baseline/CNN/cnn.py"
 ```
 
 For the TimeNet, TSMixer, LSTM, and iTransformer baselines, enter the corresponding model directory before running the script so that local imports such as `models` and `utils` can be resolved correctly.
+
+After filtering rows with missing `Total_arrivals` values from the Hong Kong CSV, run DE-TFT with:
+
+```bash
+python "Models/Baseline/DE-TFT/run_de_tft.py" \
+  --data <cleaned-hong-kong-csv> \
+  --target Total_arrivals \
+  --date Date
+```
+
+DE-TFT writes timestamped JSON and CSV metrics to its configured results directory. Training outputs and checkpoints are excluded from version control.
 
 ## Notes
 
