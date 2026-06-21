@@ -3,15 +3,16 @@
 
 正确的归一化协议：
 1. 先按时间顺序划分 train/test（前 70% 训练，后 30% 测试）
-2. Scaler 仅在训练集上 fit
-3. 用训练集的 scaler transform 测试集
+2. 缩放器（scaler）仅在训练集上拟合（fit）
+3. 使用训练集缩放器转换（transform）测试集
 4. 构建滑动窗口（window=30, horizon=1）
 """
+
+from typing import Optional, Tuple
 
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from typing import Tuple, Optional
 
 # ============================================================
 # 配置常量
@@ -108,8 +109,8 @@ def normalize_data(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, MinMaxScaler, MinMaxScaler]:
     """
     正确的归一化流程（避免数据泄露）：
-    - 仅在训练集上 fit scaler
-    - 用训练集的 scaler transform 测试集
+    - 仅在训练集上拟合缩放器（scaler）
+    - 使用训练集缩放器转换测试集
 
     Returns:
         X_train_sc, X_test_sc, y_train_sc, y_test_sc, scaler_X, scaler_y
@@ -171,7 +172,7 @@ def prepare_data(
     Returns:
         dict with keys:
             X_train, y_train, X_test, y_test: 滑动窗口后的数据
-            scaler_y: 目标变量的 scaler（用于反归一化）
+            scaler_y: 目标变量的缩放器（scaler），用于反归一化
             dates_train, dates_test: 日期标签
             train_ratio: 训练集比例
             n_features: 输入特征数

@@ -8,7 +8,7 @@ DE-TFT 实验入口（示例）。
 4. 在测试集上评估 RMSE 和 MAPE
 5. 保存结果
 
-用法:
+用法：
     python run_de_tft.py --data data.csv --target target_column
 
     # 指定日期列（用于按时间顺序划分）：
@@ -19,21 +19,22 @@ DE-TFT 实验入口（示例）。
 """
 
 import argparse
+import json
 import os
 import sys
+import time
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
 import torch
-import time
-import json
-from datetime import datetime
 
-# 确保模块导入正常
+# 支持从脚本所在目录直接运行
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_utils import prepare_data
-from tft_model import TemporalFusionTransformer
 from de_optimizer import optimize_tft
+from tft_model import TemporalFusionTransformer
 
 
 # ============================================================
@@ -217,14 +218,14 @@ def main():
         description="DE-TFT: Differential Evolution optimized Temporal Fusion Transformer"
     )
     parser.add_argument("--data", required=True, help="CSV 数据文件路径")
-    parser.add_argument("--target", default="target", help="目标列名 (default: target)")
-    parser.add_argument("--date", default=None, help="日期列名 (default: None)")
-    parser.add_argument("--de-pop-size", type=int, default=6, help="DE 种群大小 (default: 6)")
-    parser.add_argument("--de-max-iter", type=int, default=12, help="DE 最大迭代次数 (default: 12)")
-    parser.add_argument("--max-epochs", type=int, default=100, help="最大训练轮数 (default: 100)")
-    parser.add_argument("--patience", type=int, default=15, help="Early stopping 耐心值 (default: 15)")
+    parser.add_argument("--target", default="target", help="目标列名（默认：target）")
+    parser.add_argument("--date", default=None, help="日期列名（默认：None）")
+    parser.add_argument("--de-pop-size", type=int, default=6, help="DE 种群大小（默认：6）")
+    parser.add_argument("--de-max-iter", type=int, default=12, help="DE 最大迭代次数（默认：12）")
+    parser.add_argument("--max-epochs", type=int, default=100, help="最大训练轮数（默认：100）")
+    parser.add_argument("--patience", type=int, default=15, help="早停耐心值（默认：15）")
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda", "mps"])
-    parser.add_argument("--results-dir", default="results", help="结果保存目录 (default: results)")
+    parser.add_argument("--results-dir", default="results", help="结果保存目录（默认：results）")
     args = parser.parse_args()
 
     print("=" * 60)

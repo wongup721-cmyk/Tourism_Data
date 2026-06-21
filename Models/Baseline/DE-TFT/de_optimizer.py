@@ -5,12 +5,13 @@
 适应度函数 = 验证集 MAPE（越小越好）。
 """
 
+import time
+from typing import Tuple
+
 import numpy as np
+from scipy.optimize import differential_evolution
 import torch
 import torch.nn as nn
-from scipy.optimize import differential_evolution
-from typing import Tuple
-import time
 
 from tft_model import TemporalFusionTransformer
 
@@ -94,7 +95,7 @@ def train_and_evaluate(
         learning_rate: 学习率
         batch_size: 批次大小
         max_epochs: 最大训练轮数
-        patience: Early stopping 耐心值
+        patience: 早停（early stopping）耐心值
         device: 计算设备
         verbose: 是否打印训练详情
 
@@ -127,7 +128,7 @@ def train_and_evaluate(
     for epoch in range(max_epochs):
         model.train()
 
-        # Mini-batch 训练
+        # 小批量（mini-batch）训练
         indices = torch.randperm(n_train)
         total_loss = 0.0
         n_batches = 0
@@ -157,7 +158,7 @@ def train_and_evaluate(
 
         scheduler.step(val_loss)
 
-        # Early stopping
+        # 早停（early stopping）
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             best_model_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}

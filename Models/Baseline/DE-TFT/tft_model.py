@@ -8,9 +8,10 @@ Temporal Fusion Transformer (TFT) — 纯 PyTorch 实现。
 - 保留核心组件：Variable Selection → LSTM → Multi-head Attention → GRN → Output
 """
 
+import math
+
 import torch
 import torch.nn as nn
-import math
 
 
 # ============================================================
@@ -91,7 +92,7 @@ class VariableSelectionNetwork(nn.Module):
         Args:
             input_size: 输入特征数
             hidden_size: GRN 隐藏维度
-            dropout: Dropout 比例
+            dropout: 丢弃率（dropout）
         """
         super().__init__()
         self.input_size = input_size
@@ -227,7 +228,7 @@ class TemporalFusionTransformer(nn.Module):
             n_features: 输入特征数
             hidden_size: 隐藏维度（d_model）
             n_heads: 注意力头数
-            dropout: Dropout 比例
+            dropout: 丢弃率（dropout）
             n_lstm_layers: LSTM 层数
         """
         super().__init__()
@@ -260,7 +261,7 @@ class TemporalFusionTransformer(nn.Module):
         self.output_grn = GRN(hidden_size, hidden_size, hidden_size, dropout)
         self.output_layer = nn.Linear(hidden_size, 1)
 
-        # 7. 全局 Dropout
+        # 7. 全局丢弃层（dropout）
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, return_attention: bool = False):
